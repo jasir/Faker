@@ -20,6 +20,9 @@ class Documentor
             $providerClass = get_class($provider);
             $formatters[$providerClass] = array();
             $refl = new \ReflectionObject($provider);
+            if ($refl->getName() === 'Faker\Provider\Image') {
+                continue;
+            }
             foreach ($refl->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflmethod) {
                 if ($reflmethod->getDeclaringClass()->getName() == 'Faker\Provider\Base' && $providerClass != 'Faker\Provider\Base') {
                     continue;
@@ -43,7 +46,7 @@ class Documentor
                 } elseif ($example instanceof \DateTime) {
                     $example = "DateTime('" . $example->format('Y-m-d H:i:s') . "')";
                 } else {
-                    $example = var_export($example, true);
+                    $example = print_r($example, true);
                 }
                 $formatters[$providerClass][$methodName . $parameters] = $example;
             }
